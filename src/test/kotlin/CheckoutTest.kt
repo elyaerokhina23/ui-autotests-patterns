@@ -1,11 +1,12 @@
 import data.Catalog
 import data.CustomerFactory
 import data.Users
+import model.Customer
 import model.Product
 import model.totalPrice
-import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.MethodSource
 import pages.CartPage
 import pages.LoginPage
@@ -16,7 +17,7 @@ class CheckoutTest : BaseTest() {
     @ParameterizedTest(name = "{index}: {0}")
     @MethodSource("orders")
     fun orderIsPlaced(products: List<Product>) {
-        val overview = LoginPage().get()
+        LoginPage().get()
             .loginAs(Users.standard)
             .addToCart(products)
             .shouldHaveCartCount(products.size)
@@ -26,10 +27,9 @@ class CheckoutTest : BaseTest() {
             .fill(CustomerFactory.valid())
             .continueToOverview()
             .shouldContainExactly(products)
-
-        assertEquals(products.totalPrice(), overview.itemTotal())
-
-        overview.finish().shouldShowThankYou()
+            .shouldHaveItemTotal(products.totalPrice())
+            .finish()
+            .shouldShowThankYou()
     }
 
     @Test
@@ -43,8 +43,9 @@ class CheckoutTest : BaseTest() {
             .shouldContainExactly(listOf(Catalog.ONESIE))
     }
 
-    @Test
-    fun postalCodeIsRequired() {
+    @ParameterizedTest(name = "{1}")
+    @MethodSource("incompleteCustomers")
+    fun checkoutRequiresCustomerInfo(customer: Customer, expectedError: String) {
         LoginPage().get()
             .loginAs(Users.standard)
             .addToCart(Catalog.BIKE_LIGHT)
@@ -52,9 +53,9 @@ class CheckoutTest : BaseTest() {
         // корзину открываем сразу по url, без клика по иконке
         CartPage().get()
             .checkout()
-            .fill(CustomerFactory.withoutPostalCode())
+            .fill(customer)
             .continueExpectingError()
-            .shouldShowError("Postal Code is required")
+            .shouldShowError(expectedError)
     }
 
     companion object {
@@ -63,6 +64,13 @@ class CheckoutTest : BaseTest() {
             listOf(Catalog.BACKPACK),
             listOf(Catalog.BIKE_LIGHT, Catalog.BOLT_TSHIRT),
             listOf(Catalog.FLEECE_JACKET, Catalog.ONESIE, Catalog.RED_TSHIRT),
+        )
+
+        @JvmStatic
+        fun incompleteCustomers(): Stream<Arguments> = Stream.of(
+            Arguments.of(CustomerFactory.withoutFirstName(), "First Name is required"),
+            Arguments.of(CustomerFactory.withoutLastName(), "Last Name is required"),
+            Arguments.of(CustomerFactory.withoutPostalCode(), "Postal Code is required"),
         )
     }
 }

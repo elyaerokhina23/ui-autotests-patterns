@@ -5,7 +5,6 @@ import model.User
 enum class UserType {
     STANDARD,
     LOCKED_OUT,
-    PROBLEM,
 }
 
 object Users {
@@ -14,7 +13,6 @@ object Users {
     private val users = mapOf(
         UserType.STANDARD to User("standard_user", PASSWORD),
         UserType.LOCKED_OUT to User("locked_out_user", PASSWORD),
-        UserType.PROBLEM to User("problem_user", PASSWORD),
     )
 
     operator fun get(type: UserType): User = users.getValue(type)

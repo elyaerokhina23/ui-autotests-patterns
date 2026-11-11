@@ -18,8 +18,6 @@ class CheckoutOverviewPage : LoadablePage<CheckoutOverviewPage>("/checkout-step-
         title.shouldHaveText("Checkout: Overview")
     }
 
-    fun itemTotal(): Money = Money.parse(subtotal.text)
-
     fun shouldContainExactly(products: List<Product>): CheckoutOverviewPage {
         items.shouldContainExactly(products)
         return this

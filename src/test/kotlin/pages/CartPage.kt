@@ -16,15 +16,8 @@ class CartPage : LoadablePage<CartPage>("/cart.html") {
         title.shouldHaveText("Your Cart")
     }
 
-    fun products(): List<Product> = items.products()
-
     fun shouldContainExactly(products: List<Product>): CartPage {
         items.shouldContainExactly(products)
-        return this
-    }
-
-    fun shouldBeEmpty(): CartPage {
-        items.shouldBeEmpty()
         return this
     }
 

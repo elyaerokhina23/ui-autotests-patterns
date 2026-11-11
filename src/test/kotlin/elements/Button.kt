@@ -6,9 +6,6 @@ import com.codeborne.selenide.SelenideElement
 
 class Button(root: SelenideElement) : BaseElement(root) {
 
-    val text: String
-        get() = root.text()
-
     fun click() {
         root.shouldBe(enabled).click()
     }

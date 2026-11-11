@@ -15,5 +15,7 @@ object CustomerFactory {
 
     fun withoutFirstName() = valid().copy(firstName = "")
 
+    fun withoutLastName() = valid().copy(lastName = "")
+
     fun withoutPostalCode() = valid().copy(postalCode = "")
 }

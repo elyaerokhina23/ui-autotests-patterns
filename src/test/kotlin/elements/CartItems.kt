@@ -20,8 +20,4 @@ class CartItems(private val items: ElementsCollection) {
         items.shouldHave(size(expected.size))
         assertEquals(expected.sortedBy { it.name }, products().sortedBy { it.name })
     }
-
-    fun shouldBeEmpty() {
-        items.shouldHave(size(0))
-    }
 }
