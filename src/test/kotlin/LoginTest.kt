@@ -2,6 +2,7 @@ import data.Catalog
 import data.UserType
 import data.Users
 import model.User
+import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments
@@ -9,8 +10,10 @@ import org.junit.jupiter.params.provider.MethodSource
 import pages.LoginPage
 import java.util.stream.Stream
 
+@DisplayName("Логин")
 class LoginTest : BaseTest() {
 
+    @DisplayName("Обычный пользователь видит весь каталог и пустую корзину")
     @Test
     fun standardUserSeesWholeCatalog() {
         LoginPage().get()
@@ -19,6 +22,7 @@ class LoginTest : BaseTest() {
             .shouldHaveCartCount(0)
     }
 
+    @DisplayName("Неверные данные дают ошибку")
     @ParameterizedTest(name = "{0} -> {1}")
     @MethodSource("invalidCredentials")
     fun loginFails(user: User, expectedError: String) {

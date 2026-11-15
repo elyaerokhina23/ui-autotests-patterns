@@ -2,13 +2,16 @@ import data.Catalog
 import data.Users
 import model.SortOrder
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.EnumSource
 import pages.LoginPage
 
+@DisplayName("Сортировка каталога")
 class SortingTest : BaseTest() {
 
-    @ParameterizedTest
+    @DisplayName("Товары отсортированы")
+    @ParameterizedTest(name = "{0}")
     @EnumSource(SortOrder::class)
     fun productsAreSorted(order: SortOrder) {
         val products = LoginPage().get()

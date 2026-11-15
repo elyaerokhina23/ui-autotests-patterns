@@ -2,17 +2,18 @@ package elements
 
 import com.codeborne.selenide.CollectionCondition.size
 import com.codeborne.selenide.ElementsCollection
+import locators.Locators.dataTest
 import model.Money
 import model.Product
 import org.junit.jupiter.api.Assertions.assertEquals
 
-// список позиций на странице корзины и на шаге Checkout: Overview
+// список позиций на странице корзины и на шаге "Checkout: Overview"
 class CartItems(private val items: ElementsCollection) {
 
     fun products(): List<Product> = items.asFixedIterable().map {
         Product(
-            name = it.find(".inventory_item_name").text(),
-            price = Money.parse(it.find(".inventory_item_price").text()),
+            name = it.find(dataTest("inventory-item-name")).text(),
+            price = Money.parse(it.find(dataTest("inventory-item-price")).text()),
         )
     }
 

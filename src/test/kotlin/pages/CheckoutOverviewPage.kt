@@ -5,14 +5,15 @@ import com.codeborne.selenide.Selenide.elements
 import elements.Button
 import elements.CartItems
 import elements.Label
+import locators.Locators.dataTest
 import model.Money
 import model.Product
 
 class CheckoutOverviewPage : LoadablePage<CheckoutOverviewPage>("/checkout-step-two.html") {
-    private val title = Label(element(".title"))
-    private val items = CartItems(elements(".cart_item"))
-    private val subtotal = Label(element(".summary_subtotal_label"))
-    private val finishButton = Button(element("#finish"))
+    private val title = Label(element(dataTest("title")))
+    private val items = CartItems(elements("${dataTest("cart-list")} ${dataTest("inventory-item")}"))
+    private val subtotal = Label(element(dataTest("subtotal-label")))
+    private val finishButton = Button(element(dataTest("finish")))
 
     override fun isLoaded() {
         title.shouldHaveText("Checkout: Overview")

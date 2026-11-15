@@ -2,19 +2,23 @@ package pages
 
 import com.codeborne.selenide.CollectionCondition.size
 import com.codeborne.selenide.CollectionCondition.sizeGreaterThan
+import com.codeborne.selenide.Selectors.byXpath
 import com.codeborne.selenide.Selenide.element
 import com.codeborne.selenide.Selenide.elements
 import elements.Dropdown
 import elements.Header
 import elements.Label
 import elements.ProductCard
+import locators.Locators.dataTest
+import locators.Locators.xpathDataTest
+import locators.Locators.xpathLiteral
 import model.Product
 import model.SortOrder
 
 class InventoryPage : LoadablePage<InventoryPage>("/inventory.html") {
-    private val title = Label(element(".title"))
-    private val items = elements(".inventory_item")
-    private val sort = Dropdown(element("[data-test='product-sort-container']"))
+    private val title = Label(element(dataTest("title")))
+    private val items = elements("${dataTest("inventory-list")} ${dataTest("inventory-item")}")
+    private val sort = Dropdown(element(dataTest("product-sort-container")))
 
     val header = Header()
 
@@ -27,9 +31,16 @@ class InventoryPage : LoadablePage<InventoryPage>("/inventory.html") {
         return items.asFixedIterable().map { ProductCard(it) }
     }
 
-    private fun card(product: Product): ProductCard =
-        cards().firstOrNull { it.toProduct().name == product.name }
-            ?: throw AssertionError("Товар '${product.name}' не найден в каталоге")
+    // карточка ищется по названию товара внутри нее - в css нет поиска по тексту, поэтому xpath
+    private fun card(product: Product) = ProductCard(
+        element(
+            byXpath(
+                "//${xpathDataTest("inventory-list")}" +
+                    "//${xpathDataTest("inventory-item")}" +
+                    "[.//${xpathDataTest("inventory-item-name")}[normalize-space()=${xpathLiteral(product.name)}]]",
+            ),
+        ),
+    )
 
     fun products(): List<Product> = cards().map { it.toProduct() }
 

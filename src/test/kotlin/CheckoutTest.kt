@@ -4,6 +4,7 @@ import data.Users
 import model.Customer
 import model.Product
 import model.totalPrice
+import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments
@@ -12,8 +13,10 @@ import pages.CartPage
 import pages.LoginPage
 import java.util.stream.Stream
 
+@DisplayName("Оформление заказа")
 class CheckoutTest : BaseTest() {
 
+    @DisplayName("Заказ оформляется, сумма Item total сходится с ценами")
     @ParameterizedTest(name = "{index}: {0}")
     @MethodSource("orders")
     fun orderIsPlaced(products: List<Product>) {
@@ -32,6 +35,7 @@ class CheckoutTest : BaseTest() {
             .shouldShowThankYou()
     }
 
+    @DisplayName("Удаленный товар не попадает в корзину")
     @Test
     fun removedProductIsNotInCart() {
         LoginPage().get()
@@ -43,6 +47,7 @@ class CheckoutTest : BaseTest() {
             .shouldContainExactly(listOf(Catalog.ONESIE))
     }
 
+    @DisplayName("Без данных покупателя заказ не оформить")
     @ParameterizedTest(name = "{1}")
     @MethodSource("incompleteCustomers")
     fun checkoutRequiresCustomerInfo(customer: Customer, expectedError: String) {

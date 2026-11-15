@@ -4,10 +4,7 @@ import com.codeborne.selenide.Selenide
 import com.codeborne.selenide.WebDriverRunner
 import java.net.URI
 
-/**
- * Loadable Component: страница сама знает свой адрес и как проверить, что она загрузилась.
- * get() открывает страницу, только если мы сейчас не на ней.
- */
+// Loadable Component - страница знает свой адрес и как проверить, что она загрузилась
 abstract class LoadablePage<T : LoadablePage<T>>(private val path: String) {
 
     protected abstract fun isLoaded()
@@ -16,6 +13,7 @@ abstract class LoadablePage<T : LoadablePage<T>>(private val path: String) {
         Selenide.open(path)
     }
 
+    // открывает страницу, только если мы сейчас не на ней
     fun get(): T {
         if (!isCurrentPage()) {
             load()
